@@ -1,0 +1,37 @@
+﻿@model PagedList.IPagedList<QLBanHang.Models.SanPham>
+@using QLBanHang.Models
+@using PagedList.Mvc
+<link rel="stylesheet"/ href="~/Content/PagedList.css" />
+@{ 
+    ViewBag.Title = "Home page";
+}
+
+@using (Html.BeginForm())
+{
+    <p></p>
+    <div class="form-group form-inline">
+        Tìm sàn phẩm: @Html.TextBox("SearchString", "", new { @class = "form-control" })
+        <input type="submit" class="btn btn-default" value="Search" />
+    </div>
+}
+<div class="row">
+    @foreach (var item in Model) {
+        <div class="col col-lg-3 col-md-3 col-xs-3 text-center">
+            <h3>@item.TenSP</h3>
+            @Html.Image("../" + item.HinhSP, "80", "100", "Lỗi hình")
+            <br />
+            @String.Format("{0:0,### VNĐ}", item.Dongia)
+            <br />
+            <a class="btn btn-primary" href="@Url.Action("Details", "SanPhams", new { id = item.MaSP })">Xem chi tiết</a>
+        </div>
+    }
+</div>
+<div>
+    Trang @(Model.PageCount<Model.PageNumber?0:Model.PageNumber)/@Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("Index", 
+    new
+    {
+        page,
+        currentFilter = ViewBag.CurrentFilter
+    }))
+</div>
